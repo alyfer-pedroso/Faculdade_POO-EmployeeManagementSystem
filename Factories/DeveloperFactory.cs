@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EmployeeManagementSystem.Models;
+using EmployeeManagementSystem.Utils;
 
 namespace EmployeeManagementSystem.Factories
 {
@@ -12,10 +13,8 @@ namespace EmployeeManagementSystem.Factories
         public Employee CreateEmployee()
         {
             Developer developer = new();
-            Console.Write("Enter Overtime Hours: ");
-            developer.OvertimeHours = int.Parse(Console.ReadLine() ?? "0");
-            Console.Write("Enter Overtime Rate: ");
-            developer.OvertimeRate = decimal.Parse(Console.ReadLine() ?? "0");
+            developer.OvertimeHours = InputHelper.ReadInt("Enter Overtime Hours: ");
+            developer.OvertimeRate = InputHelper.ReadDecimal("Enter Overtime Rate: ");
             return developer;
         }
     }

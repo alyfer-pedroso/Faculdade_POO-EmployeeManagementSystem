@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EmployeeManagementSystem.Models;
+using EmployeeManagementSystem.Utils;
 
 namespace EmployeeManagementSystem.Factories
 {
@@ -12,8 +13,7 @@ namespace EmployeeManagementSystem.Factories
         public Employee CreateEmployee()
         {
             Manager manager = new();
-            Console.Write("Enter Bonus: ");
-            manager.Bonus = decimal.Parse(Console.ReadLine() ?? "0");
+            manager.Bonus = InputHelper.ReadDecimal("Enter Bonus: ");
             return manager;
         }
     }

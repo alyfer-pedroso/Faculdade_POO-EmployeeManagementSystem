@@ -30,7 +30,7 @@ namespace EmployeeManagementSystem.Utils
             while (!int.TryParse(Console.ReadLine(), out value) || value < min || value > max)
             {
                 if (min == int.MinValue || max == int.MaxValue)
-                    Console.Write($"Enter a valid integger");
+                    Console.Write($"Enter a valid integger: ");
                 else
                     Console.Write($"Enter a valid integger between {min} and {max}: ");
             }
@@ -46,7 +46,7 @@ namespace EmployeeManagementSystem.Utils
             while (!decimal.TryParse(Console.ReadLine(), out value) || value < min || value > max)
             {
                 if (min == decimal.MinValue || max == decimal.MaxValue)
-                    Console.Write($"Enter a valid decimal number");
+                    Console.Write($"Enter a valid decimal number: ");
                 else
                     Console.Write($"Enter a valid decimal number between {min} and {max}: ");
             }
