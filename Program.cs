@@ -1,4 +1,5 @@
-﻿using EmployeeManagementSystem.Menu;
+﻿using System.Globalization;
+using EmployeeManagementSystem.Menu;
 
 namespace EmployeeManagementSystem
 {
@@ -6,6 +7,9 @@ namespace EmployeeManagementSystem
     {
         static void Main(string[] args)
         {
+            CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+            CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
+
             ConsoleMenu menu = new ConsoleMenu();
             menu.Show();
         }

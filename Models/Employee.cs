@@ -27,7 +27,7 @@ namespace EmployeeManagementSystem.Models
             Console.WriteLine($"\nName: {Name}");
             Console.WriteLine($"Age: {Age}");
             Console.WriteLine($"Role: {Role}");
-            Console.WriteLine($"Base Salary: ${BaseSalary}");
+            Console.WriteLine($"Base Salary: ${BaseSalary:0.00}");
             Console.WriteLine($"Payment Method: {PaymentMethod}");
             Console.WriteLine($"Delivery Method: {DeliveryMethod}");
         }

@@ -30,9 +30,9 @@ namespace EmployeeManagementSystem.Models
         {
             base.DisplayInfo();
             Console.WriteLine($"Bonus: ${Bonus}");
-            Console.WriteLine($"Total Salary: ${SalaryWithBonus():F2}");
-            Console.WriteLine($"Taxes: ${SalaryWithBonus():F2} * ${(_taxes * 100):F2}% = {CalculateTaxes():F2}");
-            Console.WriteLine($"Net Salary: ${CalculateSalary():F2}");
+            Console.WriteLine($"Total Salary: ${SalaryWithBonus():0.00}");
+            Console.WriteLine($"Taxes: ${SalaryWithBonus():0.00} * ${(_taxes * 100):0.00}% = {CalculateTaxes():0.00}");
+            Console.WriteLine($"Net Salary: ${CalculateSalary():0.00}");
         }
     }
 }
