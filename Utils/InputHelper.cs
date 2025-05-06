@@ -11,7 +11,7 @@ namespace EmployeeManagementSystem.Utils
         public static string ReadString(string prompt)
         {
             Console.Write(prompt);
-            string input = Console.ReadLine() ?? string.Empty;
+            string input = (Console.ReadLine() ?? string.Empty).Trim();
 
             while (string.IsNullOrWhiteSpace(input))
             {
@@ -67,5 +67,25 @@ namespace EmployeeManagementSystem.Utils
 
             return input;
         }
+
+        public static string ReadName(string prompt)
+        {
+            Console.Write(prompt);
+            string input = (Console.ReadLine() ?? string.Empty).Trim();
+        
+            while (!IsValidName(input))
+            {
+                Console.Write("Invalid name. Enter only letters (A-Z, a-z) with at least 3 characters: ");
+                input = Console.ReadLine() ?? string.Empty;
+            }
+        
+            return input;
+        }
+        
+        private static bool IsValidName(string input)
+        {
+            return input.Length >= 3 && input.All(char.IsLetter);
+        }
+
     }
 }
