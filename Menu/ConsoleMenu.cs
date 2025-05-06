@@ -56,8 +56,8 @@ namespace EmployeeManagementSystem.Menu
                 employee.Name = InputHelper.ReadString("Enter Name: ");
             }
 
-            employee.Age = InputHelper.ReadInt("Enter Age: ");
-            employee.BaseSalary = InputHelper.ReadDecimal("Enter Base Salary: ");
+            employee.Age = InputHelper.ReadInt("Enter Age: ", 15, 125);
+            employee.BaseSalary = InputHelper.ReadDecimal("Enter Base Salary: ", 100);
             employee.PaymentMethod = InputHelper.ReadOption($"Enter Payment Method ({string.Join(", ", validPaymentMethods)}): ", validPaymentMethods);
             employee.DeliveryMethod = InputHelper.ReadOption($"Enter Delivery Method ({string.Join(", ", validDeliveryMethods)}): ", validDeliveryMethods);
 
