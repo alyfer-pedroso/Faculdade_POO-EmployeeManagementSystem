@@ -1,4 +1,4 @@
-# Sistema de Gerenciamento de Funcionários
+# Relatório Técnico: Sistema de Gerenciamento de Funcionários
 
 ## 1. Introdução
 
@@ -66,7 +66,7 @@ public class ManagerFactory : IEmployeeFactory
     public Employee CreateEmployee()
     {
         Manager manager = new();
-        manager.Bonus = InputHelper.ReadDecimal("Enter Bonus: ");
+        manager.Bonus = InputHelper.ReadDecimal("Enter Bonus: ", 0);
         return manager;
     }
 }
@@ -76,8 +76,8 @@ public class DeveloperFactory : IEmployeeFactory
     public Employee CreateEmployee()
     {
         Developer developer = new();
-        developer.OvertimeHours = InputHelper.ReadInt("Enter Overtime Hours: ");
-        developer.OvertimeRate = InputHelper.ReadDecimal("Enter Overtime Rate: ");
+        developer.OvertimeHours = InputHelper.ReadInt("Enter Overtime Hours: ", 0);
+        developer.OvertimeRate = InputHelper.ReadDecimal("Enter Overtime Rate: ", 0);
         return developer;
     }
 }
@@ -117,8 +117,16 @@ public abstract class Employee
     public abstract decimal CalculateSalary();
     public virtual decimal CalculateTaxes() => 0m;
     public virtual void DeliverPayment() => 
-        Console.WriteLine($"{Name}'s payment will be delivered via {DeliveryMethod} using {PaymentMethod}");
-    public virtual void DisplayInfo() { /* Implementação base */ }
+        Console.WriteLine($"{Name}'s paymentt will be delivered via {DeliveryMethod} using {PaymentMethod}");
+    public virtual void DisplayInfo() 
+    {
+        Console.WriteLine($"\nName: {Name}");
+        Console.WriteLine($"Age: {Age}");
+        Console.WriteLine($"Role: {Role}");
+        Console.WriteLine($"Base Salary: ${BaseSalary}");
+        Console.WriteLine($"Payment Method: {PaymentMethod}");
+        Console.WriteLine($"Delivery Method: {DeliveryMethod}");
+    }
 }
 ```
 
@@ -146,8 +154,20 @@ public class Manager : Employee
 
     public decimal SalaryWithBonus() => BaseSalary + Bonus;
     public override decimal CalculateTaxes() => SalaryWithBonus() * _taxes;
-    public override decimal CalculateSalary() => SalaryWithBonus() - CalculateTaxes();
-    public override void DisplayInfo() { /* Implementação específica */ }
+    public override decimal CalculateSalary()
+    {
+        decimal gross = SalaryWithBonus();
+        return gross - CalculateTaxes();
+    }
+    
+    public override void DisplayInfo()
+    {
+        base.DisplayInfo();
+        Console.WriteLine($"Bonus: ${Bonus}");
+        Console.WriteLine($"Total Salary: ${SalaryWithBonus():F2}");
+        Console.WriteLine($"Taxes: ${SalaryWithBonus():F2} * ${(_taxes * 100):F2}% = {CalculateTaxes():F2}");
+        Console.WriteLine($"Net Salary: ${CalculateSalary():F2}");
+    }
 }
 ```
 
@@ -167,8 +187,21 @@ public class Developer : Employee
 
     public decimal SalaryWithOvertime() => BaseSalary + (OvertimeHours * OvertimeRate);
     public override decimal CalculateTaxes() => SalaryWithOvertime() * _taxes;
-    public override decimal CalculateSalary() => SalaryWithOvertime() - CalculateTaxes();
-    public override void DisplayInfo() { /* Implementação específica */ }
+    public override decimal CalculateSalary()
+    {
+        decimal gross = SalaryWithOvertime();
+        return gross - CalculateTaxes();
+    }
+    
+    public override void DisplayInfo()
+    {
+        base.DisplayInfo();
+        Console.WriteLine($"Overtime Hours: {OvertimeHours}");
+        Console.WriteLine($"Overtime Rate: {OvertimeRate}");
+        Console.WriteLine($"Total Salary (${BaseSalary} + ({OvertimeHours} * ${OvertimeRate:F2})): {SalaryWithOvertime():F2}");
+        Console.WriteLine($"Taxes: ${SalaryWithOvertime():F2} * ${(_taxes * 100):F2}% = {CalculateTaxes():F2}");
+        Console.WriteLine($"Net Salary: ${CalculateSalary():F2}");
+    }
 }
 ```
 
@@ -177,7 +210,7 @@ public class Developer : Employee
 ```csharp
 public class Intern : Employee
 {
-    private readonly decimal _taxes = 0.0m; // 0%
+    private readonly decimal _taxes = 0.10m; // 10%
 
     public Intern()
     {
@@ -185,7 +218,7 @@ public class Intern : Employee
     }
 
     public override decimal CalculateSalary() => BaseSalary;
-    public override decimal CalculateTaxes() => 0m;
+    public override decimal CalculateTaxes() => 0.10m;
 }
 ```
 
@@ -214,6 +247,18 @@ IEmployeeFactory factory = roleFactories.First(x => x.Key == roleChoice).Value()
 var employee = factory.CreateEmployee();
 ```
 
+A classe também implementa validação para evitar a duplicação de nomes:
+
+```csharp
+employee.Name = InputHelper.ReadName("Enter Name: ");
+
+while (Array.IndexOf(employees.Select(x => x.Name).ToArray(), employee.Name) != -1)
+{
+    Console.WriteLine("\nEmployee with this name already exists. Please enter a different name.\n");
+    employee.Name = InputHelper.ReadString("Enter Name: ");
+}
+```
+
 ### 5.2 InputHelper
 
 A classe utilitária `InputHelper` fornece métodos estáticos para validar e ler dados do usuário:
@@ -223,6 +268,31 @@ public static string ReadString(string prompt);
 public static int ReadInt(string prompt, int min = int.MinValue, int max = int.MaxValue);
 public static decimal ReadDecimal(string prompt, decimal min = decimal.MinValue, decimal max = decimal.MaxValue);
 public static string ReadOption(string prompt, string[] validOptions);
+public static string ReadName(string prompt);
+private static bool IsValidName(string input);
+```
+
+Foi adicionada uma função especializada `ReadName()` para validar nomes de funcionários, garantindo que tenham pelo menos 3 caracteres e contenham apenas letras:
+
+```csharp
+public static string ReadName(string prompt)
+{
+    Console.Write(prompt);
+    string input = (Console.ReadLine() ?? string.Empty).Trim();
+
+    while (!IsValidName(input))
+    {
+        Console.Write("Invalid name. Enter only letters (A-Z, a-z) with at least 3 characters: ");
+        input = Console.ReadLine() ?? string.Empty;
+    }
+
+    return input;
+}
+
+private static bool IsValidName(string input)
+{
+    return input.Length >= 3 && input.All(char.IsLetter);
+}
 ```
 
 Esta classe melhora a robustez do sistema, garantindo que os dados fornecidos pelo usuário sejam válidos antes de serem processados.
@@ -237,7 +307,7 @@ O sistema implementa as seguintes regras para cálculo de salários e impostos:
 |---------------------|---------------------|----------------|
 | Gerente             | Base + Bônus - Impostos | 27,5% |
 | Desenvolvedor       | Base + (Horas Extras * Taxa) - Impostos | 10% |
-| Estagiário          | Base (sem impostos) | 0% (isento) |
+| Estagiário          | Base (sem impostos) | 10% (não aplicada) |
 
 ### 6.2 Implementação
 
@@ -294,6 +364,8 @@ A decisão de usar constantes para as taxas de imposto (`const decimal _taxes = 
 ### 7.5 Validação de Entrada
 
 A implementação de métodos robustos para validação de entrada no `InputHelper` foi uma decisão importante para evitar erros e melhorar a experiência do usuário. Métodos como `ReadInt()` e `ReadDecimal()` validam a entrada do usuário e solicitam novos valores até que uma entrada válida seja fornecida.
+
+A adição do método `ReadName()` com validação específica para nomes de funcionários aumenta a robustez do sistema, garantindo que apenas nomes válidos (com pelo menos 3 caracteres e contendo apenas letras) sejam aceitos.
 
 ## 8. Possíveis Melhorias Futuras
 
