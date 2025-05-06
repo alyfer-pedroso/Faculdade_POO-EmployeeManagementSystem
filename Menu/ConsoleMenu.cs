@@ -48,7 +48,7 @@ namespace EmployeeManagementSystem.Menu
 
             var employee = factory.CreateEmployee();
 
-            employee.Name = InputHelper.ReadString("Enter Name: ");
+            employee.Name = InputHelper.ReadName("Enter Name: ");
 
             while (Array.IndexOf(employees.Select(x => x.Name).ToArray(), employee.Name) != -1)
             {
