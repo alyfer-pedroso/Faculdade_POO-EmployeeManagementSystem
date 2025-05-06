@@ -13,8 +13,8 @@ namespace EmployeeManagementSystem.Factories
         public Employee CreateEmployee()
         {
             Developer developer = new();
-            developer.OvertimeHours = InputHelper.ReadInt("Enter Overtime Hours: ");
-            developer.OvertimeRate = InputHelper.ReadDecimal("Enter Overtime Rate: ");
+            developer.OvertimeHours = InputHelper.ReadInt("Enter Overtime Hours: ", 0);
+            developer.OvertimeRate = InputHelper.ReadDecimal("Enter Overtime Rate: ", 0);
             return developer;
         }
     }
