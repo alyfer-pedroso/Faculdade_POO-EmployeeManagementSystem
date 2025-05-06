@@ -13,7 +13,7 @@ namespace EmployeeManagementSystem.Factories
         public Employee CreateEmployee()
         {
             Manager manager = new();
-            manager.Bonus = InputHelper.ReadDecimal("Enter Bonus: ");
+            manager.Bonus = InputHelper.ReadDecimal("Enter Bonus: ", 0);
             return manager;
         }
     }
