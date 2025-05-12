@@ -1,4 +1,4 @@
-# Relatório Técnico: Sistema de Gerenciamento de Funcionários
+# Sistema de Gerenciamento de Funcionários
 
 ## 1. Introdução
 
